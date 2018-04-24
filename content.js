@@ -6,19 +6,21 @@
 // TODO title doesn't always update - due to it not being loaded yet
 // TODO allow user to turn it on or off for page
 // TODO revert button
+// TODO organize files
 
- // Conversions in form: [new number, old number]
-const CONVERSIONS = [
-    [/INFO 300/, 'INFO 470'],
-    [/INFO 340/, 'INFO 343'],
-    [/INFO 330/, 'INFO 340'],
-    [/INFO 331/, 'INFO 330'],
-    [/INFO 350/, 'INFO 450'],
-    [/INFO 314/, 'INFO 341'],
-    [/INFO 430/, 'INFO 445'],
-    [/INFO 441/, 'INFO 344'],
-    [/INFO 464/, 'INFO 444'],
-    [/INFO 442/, 'INFO 461']
+// Conversions in form: [new number, old number]
+
+var CONVERSIONS = [
+  [/INFO 300/, 'INFO 470'],
+  [/INFO 340/, 'INFO 343'],
+  [/INFO 330/, 'INFO 340'],
+  [/INFO 331/, 'INFO 330'],
+  [/INFO 350/, 'INFO 450'],
+  [/INFO 314/, 'INFO 341'],
+  [/INFO 430/, 'INFO 445'],
+  [/INFO 441/, 'INFO 344'],
+  [/INFO 464/, 'INFO 444'],
+  [/INFO 442/, 'INFO 461']
 ];
 
 init();
@@ -38,15 +40,10 @@ function loadJquery() {
    document.getElementsByTagName('head')[0].appendChild(script);
 }
 
-// Update the page title if it contains an old Informatics course number
-function updateTitle() {
-   for (var x = 0; x < CONVERSIONS.length; x++) {
-      document.title = document.title.replace(CONVERSIONS[x][0], CONVERSIONS[x][1]);
-   }
-}
-
 function update() {
-   console.log("update");
+   if (document.querySelectorAll(".info_reverted").length > 0) {
+      return;
+   }
    var elements = document.querySelectorAll('*');
    // Parse the entire page replacing course numbers
    outer:
