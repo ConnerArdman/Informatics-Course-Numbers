@@ -3,41 +3,68 @@
  *  the old versions of the numbers
  */
 
-update();
-function update() {
-   var elements = document.getElementsByTagName('*');
+// TODO title doesn't update - due to it not being loaded yet
+// TODO allow user to turn it on or off for page
+// TODO revert button
 
-   // Conversions in form: [new number, old number]
-   var conversions = [
-      [/INFO 300/, 'INFO 470'],
-      [/INFO 330/, 'INFO 340'],
-      [/INFO 340/, 'INFO 343'],
-      [/INFO 350/, 'INFO 450'],
-      [/INFO 314/, 'INFO 341'],
-      [/INFO 340/, 'INFO 331'],
-      [/INFO 430/, 'INFO 445'],
-      [/INFO 441/, 'INFO 344'],
-      [/INFO 464/, 'INFO 444'],
-      [/INFO 442/, 'INFO 461']
-   ];
+ // Conversions in form: [new number, old number]
+var conversions = [
+    [/INFO 300/, 'INFO 470'],
+    [/INFO 340/, 'INFO 343'],
+    [/INFO 330/, 'INFO 340'],
+    [/INFO 331/, 'INFO 330'],
+    [/INFO 350/, 'INFO 450'],
+    [/INFO 314/, 'INFO 341'],
+    [/INFO 430/, 'INFO 445'],
+    [/INFO 441/, 'INFO 344'],
+    [/INFO 464/, 'INFO 444'],
+    [/INFO 442/, 'INFO 461']
+];
+
+init();
+
+// Load in JQuery Library, update the page, its title, and set the
+// page to update whenever the DOM changes
+function init() {
+   loadJquery();
+   update();
+   updateTitle();
+   $(document).bind("DOMNodeInserted", function() {
+      update();
+   });
+}
+
+function loadJquery() {
+   var script = document.createElement('script');
+   script.src = '//code.jquery.com/jquery-1.11.0.min.js';
+   document.getElementsByTagName('head')[0].appendChild(script);
+}
+
+// Update the page title if it contains an old Informatics course number
+function updateTitle() {
+   for (var x = 0; x < conversions.length; x++) {
+      document.title = document.title.replace(conversions[x][0], conversions[x][1]);
+   }
+}
+
+function update() {
+   var elements = document.querySelectorAll('body *');
 
    // Parse the entire page replacing course numbers
+   outer:
    for (var i = 0; i < elements.length; i++) {
       var element = elements[i];
-      if (!element.classList.contains("info_changed")) {
-         for (var j = 0; j < element.childNodes.length; j++) {
-            var node = element.childNodes[j];
-
-            if (node.nodeType === 3) {
-               var text = node.nodeValue;
-               var replacedText = text;
-               for (var x = 0; x < conversions.length; x++) {
-                  var replacedText = text.replace(conversions[x][0], conversions[x][1]);
-                  if (replacedText !== text) {
-                     element.replaceChild(document.createTextNode(replacedText), node);
-                     element.classList.add("info_changed");
-                     break;
-                  }
+      for (var j = 0; j < element.childNodes.length; j++) {
+         var node = element.childNodes[j];
+         if (node.nodeType === 3 && !node.parentNode.classList.contains("info_changed")) { // If it is a text node
+            var text = node.nodeValue;
+            var parent = node.parentNode;
+            for (var x = 0; x < conversions.length; x++) {
+               replacedText = text.replace(conversions[x][0], conversions[x][1]);
+               if (replacedText !== text) {
+                  parent.classList.add("info_changed");
+                  element.replaceChild(document.createTextNode(replacedText), node);
+                  continue outer;
                }
             }
          }
