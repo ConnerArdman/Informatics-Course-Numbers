@@ -6,7 +6,8 @@
    "content_scripts": [
       {
          "matches": [
-            "*://*/*"
+            "*://*.uw.edu/*",
+            "*://*.washington.edu/*"
          ],
          "js": [
             "content.js"
