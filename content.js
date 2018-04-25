@@ -3,13 +3,9 @@
  *  the old versions of the numbers
  */
 
-// TODO title doesn't always update - due to it not being loaded yet
-// TODO allow user to turn it on or off for page
-// TODO revert button
 // TODO organize files
 
 // Conversions in form: [new number, old number]
-
 var CONVERSIONS = [
   [/INFO 300/, 'INFO 470'],
   [/INFO 340/, 'INFO 343'],
@@ -27,18 +23,12 @@ init();
 // Load in JQuery Library, update the page, its title, and set the
 // page to update whenever the DOM changes
 function init() {
-   loadJquery();
    update();
    $(document).bind("DOMNodeInserted", function() {
       update();
    });
 }
 
-function loadJquery() {
-   var script = document.createElement('script');
-   script.src = '//code.jquery.com/jquery-1.11.0.min.js';
-   document.getElementsByTagName('head')[0].appendChild(script);
-}
 
 function update() {
    if (document.querySelectorAll(".info_reverted").length > 0) {
